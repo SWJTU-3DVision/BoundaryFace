@@ -1,0 +1,16 @@
+MegaFace:
+    facescrub_list: /ssd2t/datasets/devkit/devkit/templatelists/facescrub_features_list.json
+    megaceface_list: /ssd2t/datasets/devkit/devkit/templatelists/megaface_features_list.json_1000000_1
+    facescrub_noises_file: /ssd2t/datasets/megaface_testpack_v1.0/facescrub_noises.txt
+    megaface_noises_file: /ssd2t/datasets/megaface_testpack_v1.0/megaface_noises.txt
+    #cropped_face_folder: /ssd2t/datasets/megaface_testpack_v1.0/facescrub_images
+    cropped_face_folder: /ssd2t/datasets/megaface_testpack_v1.0/megaface_images
+    #image_list_file: /ssd2t/datasets/megaface_testpack_v1.0/facescrub_lst
+    image_list_file: /ssd2t/datasets/megaface_testpack_v1.0/megaface_lst
+    
+IJBC:
+    cropped_face_folder: /export2/wangjun492/face_database/facex-zoo/private_file/test_data/ijbc/arcface_crop
+    image_list_file_path: /export2/wangjun492/face_database/facex-zoo/private_file/test_data/ijbc/img_list.txt
+    template_media_list_path: /export2/wangjun492/face_database/facex-zoo/private_file/test_data/ijbc/ijbc_face_tid_mid.txt
+    template_pair_list_path: /export2/wangjun492/face_database/facex-zoo/private_file/test_data/ijbc/ijbc_template_pair_label.txt
+    image_score_list_path: /export2/wangjun492/face_database/facex-zoo/private_file/test_data/ijbc/ijbc_name_5pts_score.txt

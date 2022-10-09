@@ -1,0 +1,23 @@
+ArcFace:
+    feat_dim: 512
+    num_class: 99848
+    scale: 32
+
+boundaryMargin1:
+    feat_dim: 512
+    num_class: 85742
+    epoch_start: 10
+
+curricularMargin:
+    feat_dim: 512
+    num_class: 85742
+
+MvArcMargin:
+    feat_dim: 512
+    num_class: 99848
+
+boundaryMargin:
+    feat_dim: 512
+    num_class: 99848
+    epoch_start: 10
+
