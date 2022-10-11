@@ -8,7 +8,7 @@ The differences with NPT-Loss are：
 - The motivation (idea)  is different: NPT-Loss compresses the distance between the sample and ground truth class center while increasing the distance between the sample and the nearest negative class center by using a form of proxy triplet. BoundaryFace first considers closed-set noise.  Starting from the perspective of decision boundary, based on the premise of closed-set noise label correction, the framework directly emphasizes hard sample features that are located in the margin region.  Obviously, the NPT-Loss is still heavily disturbed by noise samples.
 - The final loss functions are different: NPT-Loss is an proxy-triplet's form with hyper-parameter free. BoundaryFace is the margin-based softmax form, and still has hyper-parameters.
 
-
+Now, for academic rigor, we have added related work to the original paper.  See link at  [Arxiv](https://arxiv.org/pdf/2210.04567.pdf)
 
 # Quick Start
 
