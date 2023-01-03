@@ -12,6 +12,8 @@ Now, for academic rigor, we have added related work to the original paper.  See 
 
 # Quick Start
 
+> This repository will help you learn more about the details of our experiments in the paper.
+
 ## Training environment
 
 Experiment based on WebFace (in paper):
@@ -89,6 +91,97 @@ python -m torch.distributed.launch --nproc_per_node=8 --nnodes=1 --node_rank=0 -
 
 
 
+
+## Results of retraining
+
+The following problems existed with the experiments in the paper, so we decided to retrain the experiments in the paper:
+
+- Due to resource and time constraints, we performed most of experiments in the paper only once.  Therefore, the experimental results are somewhat randomized. And the parameter m of SOTA  is not well considered.
+- Our training code is based on [**Face_Pytorch**](https://github.com/wujiyang/Face_Pytorch), and the data are taken from the maximum values during training. Even though no unfair comparisons occurred, we do not consider this approach to be very informative.
+
+>  Now we have retrained some results according to the experimental setting in the paper for your reference.
+>
+>  - For fair comparison, all results are from the model with the highest average accuracy on all test sets.
+>  - Related models can be found here [tod5](https://pan.baidu.com/s/1_KfiWWOw-FxMmi-1EaRYFQ?pwd=tod5).
+>  - Test environment is  1 TitanX  torch 1.1.0 
+
+
+
+**ratio: 10%：**
+
+|       Method        |    LFW    |   AgeDB   |  CFP-FP   |   CALFW   |  CPLFW   |   SLLFW   |   Asian   | Caucasian |  India   |  African  |
+| :-----------------: | :-------: | :-------: | :-------: | :-------: | :------: | :-------: | :-------: | :-------: | :------: | :-------: |
+|       ArcFace       |   99.1    |   93.78   |   94.49   |   93.15   |  89.03   |   97.8    |   85.33   |   93.22   |   89.9   |   86.75   |
+|   MV-Arc-Softmax    | **99.35** |   94.18   |   94.27   | **93.42** |  89.28   |   97.73   |   86.03   | **93.6**  |  90.05   |   86.93   |
+|   CurricularFace    |   99.17   |   93.63   |   93.63   |   93.07   |  88.63   |   97.65   |   85.05   |   92.68   |   89.7   |   86.37   |
+|     BoundaryF1      |   99.3    |   93.68   | **94.79** |   93.23   | **89.5** |   97.78   |   85.85   |   93.4    |  89.78   |   86.88   |
+| BoundaryFace（λ=π） |   99.33   | **94.18** |   94.64   |   93.3    |   89.2   | **97.85** | **86.18** |   93.55   | **90.4** | **87.53** |
+
+**ratio: 20%：**
+
+|       Method        |    LFW    |  AgeDB   |  CFP-FP  |   CALFW   |  CPLFW   |  SLLFW   |   Asian   | Caucasian |   India   |  African  |
+| :-----------------: | :-------: | :------: | :------: | :-------: | :------: | :------: | :-------: | :-------: | :-------: | :-------: |
+|       ArcFace       |   99.1    |    93    |   93.1   |   92.75   |  87.67   |  97.35   |   85.08   |   91.92   |   89.05   |   84.93   |
+|   MV-Arc-Softmax    |   99.07   |  93.23   |  93.39   |   92.98   |  88.18   |  97.55   |   85.42   |   92.03   |   89.23   |   85.33   |
+|   CurricularFace    |   98.97   |  91.63   |  92.11   |   92.03   |  87.35   |  96.32   |   84.35   |   90.7    |   87.87   |   83.37   |
+|     BoundaryF1      |   99.22   |  93.88   | **94.2** |   93.48   | **88.6** | **97.9** |   85.95   |   93.02   |   89.5    | **87.05** |
+| BoundaryFace（λ=π） | **99.25** | **93.9** |  93.99   | **93.48** |  88.15   |  97.78   | **86.37** | **93.47** | **89.63** |   87.02   |
+
+
+
+### About the parameter m
+
+ In this paper, we set the margin m = 0.5 for the training set containing closed-set noise ratio of 30% and open-set noise ratio of 10%, and we set the margin m = 0.3 for the other two mixing ratios.  Now, after our further experiments, we found that CurricularFace can get better results by setting m=0.5 on the other two mixing ratios. Besides, BoundaryF1 can obtain better results on C 20 O 20 by setting m=0.5.
+
+
+
+**C: 20%  O: 20%**  (m=0.3)
+
+|         Method         |    LFW    |   AgeDB   |  CFP-FP   |   CALFW   |   CPLFW   |   SLLFW   |   Asian   | Caucasian |   India   |  African  |
+| :--------------------: | :-------: | :-------: | :-------: | :-------: | :-------: | :-------: | :-------: | :-------: | :-------: | :-------: |
+|        ArcFace         |   98.75   |   90.13   |   89.56   |   90.83   |   83.9    |   95.07   |   81.5    |   88.45   |   85.7    |   79.92   |
+|     MV-Arc-Softmax     |   98.75   |   89.13   |   89.2    |   90.65   |   84.45   |   95.15   |   81.23   |   88.8    |   85.48   |   79.47   |
+| CurricularFace (m=0.5) |   98.32   |   89.63   |   89.94   |   90.87   |   84.47   |   94.58   |    81     |   88.22   |   85.28   |   78.83   |
+|       BoundaryF1       |   98.97   |   92.3    |   89.5    |   91.82   |   83.73   |   96.75   |   84.2    |   90.95   | **88.55** |   83.87   |
+|  BoundaryFace（λ=π）   | **99.13** | **92.63** | **92.89** | **92.43** | **87.03** | **97.03** | **84.55** | **91.63** |   88.27   | **84.77** |
+
+Based on m = 0.5, we add the results of BoundaryF1:
+|       Method       |  LFW  | AgeDB | CFP-FP | CALFW | CPLFW | SLLFW | Asian | Caucasian | India | African |
+| :----------------: | :---: | :---: | :----: | :---: | :---: | :---: | :---: | :-------: | :---: | :-----: |
+| BoundaryF1 (m=0.5) | 99.03 | 92.7  |   92   | 92.28 | 85.85 | 96.87 | 84.05 |   91.32   | 87.87 |  83.25  |
+
+
+
+**C: 10%  O: 30%** (m=0.3)
+
+|       Method        | LFW  | AgeDB | CFP-FP | CALFW | CPLFW | SLLFW | Asian | Caucasian | India | African |
+| :-----------------: | :--: | :---: | :----: | :---: | :---: | :---: | :---: | :-------: | :---: | :-----: |
+|       ArcFace       | 98.78 | 90.77 | 91.14 | 91.6 | 85.6 | 96.2 | 83.18 | 89.95 | 87.22 | 81.92 |
+|   MV-Arc-Softmax    | 99.03 | 91.83 | 91.71 | 92.02 | 86.07 | 96.45 | 83.62 | 90.53 | 87.57 | 82.95 |
+| CurricularFace (m=0.5) | 98.95 | 91.22 |   91.89   | 91.88 | 86.15 | 96.2 | 82.73 | 89.73 | 86.87 | 81.5 |
+|     BoundaryF1      | 99.05 | 92.43 | 91.24 | 92.05 |   85.6    | 96.58 | 84.43 | **91.13** | 88.02 | 83.67 |
+| BoundaryFace（λ=π） | **99.08** | **92.85** | **93.04** | **92.2** | **87.33** | **96.82** |**84.82**|91.07|**88.7**|**84.43**|
+
+**Note:** Due to lack of rigor, we made a mistake on the experiment here. The results of CurricularFace in the paper for the C 10 O 30 case correspond to a parameter of m=0.5 instead of m=0.3. We did not examine the parameter settings carefully at that time, and this reimplement of the paper results led us to discover the problem.
+
+
+
+
+
+**C: 30%  O: 10%** (m=0.5)
+
+|       Method        | LFW  | AgeDB | CFP-FP | CALFW | CPLFW | SLLFW | Asian | Caucasian | India | African |
+| :-----------------: | :--: | :---: | :----: | :---: | :---: | :---: | :---: | :-------: | :---: | :-----: |
+|       ArcFace       | 98.53 | 89.5 | 88.11 | 90.85 | 82.47 | 94.77 | 81.17 | 87.82 | 85.68 | 79 |
+|   MV-Arc-Softmax    | 98.53 | 89.58 | 87.86 | 90.88 | 82.37 | 95.02 | 80.62 | 88.1 | 85.18 | 79.12 |
+|   CurricularFace    | 98.2 | 88.25 | 88.53 | 89.68 | 82.83 | 93.62 | 80 | 86.45 | 83.82 | 77.08 |
+|     BoundaryF1      | **99.02** | 92.85 | **91.3** | 92.63 | **85.68** | 96.77 | **84.08** | 90.97 | **88.17** | 83.95 |
+| BoundaryFace（λ=π） | 98.98 | **92.95** | 87.86 | **92.77** | 82.48 | **96.8** |83.55|**91.22**|87.9|**84.03**|
+
+
+
+
+As can be seen from the tables above, our approach still has significant advantages over SOTA. Taken together, although BoundaryFace (λ = π) still outperforms BoundaryF1 on these noisy datasets, it is not as outstanding as in the paper (In the C30 O 10 case, BoundaryFace does not show a clear advantage over BoundaryF1). We believe that   the hyper-parameter λ may not be a good choice  in this case, and we will conduct more experiments for further exploration subsequently.
 
 
 
@@ -231,8 +324,6 @@ As can be seen from the table above, BoundaryFace(λ=π) performs very poorly on
 
 
 
-
-
 **Training Set: MS1MV2**
 
 |       Method       | MegaFace(R)@Rank1 | IJB-C     |    LFW    | AgeDB-30  |  CFP-FP   |   CALFW   |   CPLFW   |   SLLFW   |   Asian   | Caucasian |  Indian   |  African  |
@@ -241,6 +332,13 @@ As can be seen from the table above, BoundaryFace(λ=π) performs very poorly on
 | BoundaryFace (λ=π) |     **97.41**     | 94.49     | **99.75** |   97.98   |   95.63   |   95.9    | **91.83** | **99.52** | **97.38** | **99.22** | **97.63** |   97.93   |
 
 
+
+The following are the test results of the corresponding models on our private datasets. The datasets are collected in real environment.
+
+|       Method       | S2V-s@Rank1 | S2V-v@Rank1 | Entry@Rank1 | HD@Rank1 | swjtu2D_SEN-s@Rank1 | swjtu2D_SEN-v@Rank1 |
+| :----------------: | :---------: | :---------: | :---------: | :------: | :-----------------: | :-----------------: |
+|      ArcFace       |    93.16    |  **72.43**  |    95.87    |  99.39   |        92.89        |        48.52        |
+| BoundaryFace (λ=π) |  **95.44**  |    67.35    |  **96.7**   |  99.39   |      **93.91**      |      **51.9**       |
 
 ## Some conclusions
 
@@ -262,5 +360,5 @@ As can be seen from the table above, BoundaryFace(λ=π) performs very poorly on
 # Acknowledgements
 
 - BoundaryFace's motivation is partially  inspired by NPT-Loss  [Arxiv](https://arxiv.org/ftp/arxiv/papers/2103/2103.03503.pdf). And thanks the authors for their excellent work. 
-
 - This code is largely based on [FaceX-Zoo](https://github.com/JDAI-CV/FaceX-Zoo) and [**Face_Pytorch**](https://github.com/wujiyang/Face_Pytorch). We thank the authors a lot for their valuable efforts.
+
