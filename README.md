@@ -99,13 +99,28 @@ The following problems existed with the experiments in the paper, so we decided 
 - Due to resource and time constraints, we performed most of experiments in the paper only once.  Therefore, the experimental results are somewhat randomized. And the parameter m of SOTA  is not well considered.
 - Our training code is based on [**Face_Pytorch**](https://github.com/wujiyang/Face_Pytorch), and the data are taken from the maximum values during training. Even though no unfair comparisons occurred, we do not consider this approach to be very informative.
 
->  Now we have retrained some results according to the experimental setting in the paper for your reference.
+>  Now we have retrained some results according to the experimental setting in the paper for your reference. We get more conclusions than the paper.
 >
 >  - For fair comparison, all results are from the model with the highest average accuracy on all test sets.
 >  - Related models can be found here [tod5](https://pan.baidu.com/s/1_KfiWWOw-FxMmi-1EaRYFQ?pwd=tod5).
 >  - Test environment is  1 TitanX  torch 1.1.0 
 
 
+
+**ratio: 0%：**
+
+|       Method        |    LFW    |   AgeDB   |  CFP-FP   |   CALFW   |   CPLFW   |   SLLFW   |   Asian   | Caucasian |   India   |  African  |
+| :-----------------: | :-------: | :-------: | :-------: | :-------: | :-------: | :-------: | :-------: | :-------: | :-------: | :-------: |
+|       ArcFace       |   99.28   |   93.5    |   94.89   |   93.17   |   89.13   |   97.55   |   85.57   |   92.88   |   89.9    |   86.45   |
+|   MV-Arc-Softmax    |   99.23   |   93.83   |   94.61   |   93.17   |   89.35   |   97.88   |   85.8    |   93.18   |   90.23   |   86.35   |
+|   CurricularFace    |   99.32   |   93.85   |   94.94   | **93.47** | **89.58** |   97.87   | **86.35** | **93.9**  | **90.45** | **87.57** |
+|     BoundaryF1      |   99.28   |   94.13   |   94.66   |   92.8    |   89.27   |   97.88   |   85.6    |   92.95   |   89.72   |   86.27   |
+| BoundaryFace（λ=π） | **99.37** | **94.32** | **94.99** |   93.15   |   89.27   | **98.12** |   85.97   |   93.75   |   89.73   |   87.12   |
+
+The following conclusions can be drawn from the above data：
+
+- When the proportion of closed-set noise in the training set is low, BoundaryF1 is comparable to ArcFace (baseline); in the CASIA-WebFace, BoundaryF1 ended up detecting only about 3800 closed-set noise samples.
+- BoundaryFace is better than baseline and SOTA(MV-Arc-Softmax). BoundaryFace has a degree of advantage on the regular test set. SOTA(CurricularFace) has a relatively clear advantage in the RFW test set. In general, our approach is comparable to SOTA.
 
 **ratio: 10%：**
 
@@ -126,6 +141,12 @@ The following problems existed with the experiments in the paper, so we decided 
 |   CurricularFace    |   98.97   |  91.63   |  92.11   |   92.03   |  87.35   |  96.32   |   84.35   |   90.7    |   87.87   |   83.37   |
 |     BoundaryF1      |   99.22   |  93.88   | **94.2** |   93.48   | **88.6** | **97.9** |   85.95   |   93.02   |   89.5    | **87.05** |
 | BoundaryFace（λ=π） | **99.25** | **93.9** |  93.99   | **93.48** |  88.15   |  97.78   | **86.37** | **93.47** | **89.63** |   87.02   |
+
+The following conclusions can be drawn from the above data：
+
+- The SOTA (CurricularFace) performance shows a very significant drop as the closed-set noise rate increases; when the dataset contains 10% closed-set noise, the drop in Baseline (ArcFace) performance is not yet significant, and SOTA (MV-Arc-Softmax) performance looks comparable to the performance without noise. When the dataset contains 20% closed-set noise, there is a significant degradation in the performance of all these methods compared to no noise.
+- Unlike CurricularFace, MV-Arc-Softmax always outperforms ArcFace in general, even on noisy datasets.
+- The performance of our method (BoundaryF1 and BoundaryFace) does not show a rapid degradation as the noise rate of the closed set increases. Even on a dataset containing 20% closed-set noise, our method can still maintain good performance.
 
 
 
